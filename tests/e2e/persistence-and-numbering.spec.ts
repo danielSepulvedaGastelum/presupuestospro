@@ -1,0 +1,71 @@
+import { expect, test } from '@playwright/test'
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => new Promise<void>((resolve) => {
+    const request = indexedDB.deleteDatabase('presupuestospro')
+    request.onsuccess = () => resolve()
+    request.onerror = () => resolve()
+    request.onblocked = () => resolve()
+  }))
+  await page.reload()
+})
+
+async function saveProfile(page: import('@playwright/test').Page) {
+  await page.getByRole('button', { name: 'Mi perfil', exact: true }).click()
+  await page.getByLabel('Nombre completo').fill('Ana López')
+  await page.getByLabel('RFC').fill('LOPA900101AA1')
+  await page.getByLabel('Régimen fiscal').selectOption('RESICO')
+  await page.getByLabel('Logo (opcional)').setInputFiles({ name: 'logo.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64') })
+  await expect(page.getByAltText('Vista previa del logo')).toBeVisible()
+  await page.getByRole('button', { name: 'Guardar perfil' }).click()
+  await expect(page.getByText(/Perfil guardado\./)).toBeVisible()
+}
+
+test('asigna secuencias por año, conserva número y snapshots al recargar', async ({ page }) => {
+  await saveProfile(page)
+  await page.getByRole('button', { name: 'Presupuestos' }).click()
+  await page.getByRole('button', { name: 'Crear presupuesto' }).click()
+  await page.getByLabel('Fecha de emisión').fill('2026-03-01')
+  await page.getByLabel('Nombre o razón social').fill('Agencia Norte')
+  await page.getByRole('button', { name: 'Guardar presupuesto' }).click()
+  await expect(page.getByRole('heading', { name: 'Presupuesto 2026-001' })).toBeVisible()
+  await expect(page.getByLabel('Fecha de emisión')).toBeDisabled()
+  expect(await page.evaluate(async () => {
+    const request = indexedDB.open('presupuestospro')
+    const database = await new Promise<IDBDatabase>((resolve, reject) => { request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error) })
+    const quoteRequest = database.transaction('quotes').objectStore('quotes').getAll()
+    const quotes = await new Promise<any[]>((resolve, reject) => { quoteRequest.onsuccess = () => resolve(quoteRequest.result); quoteRequest.onerror = () => reject(quoteRequest.error) })
+    return Boolean(quotes[0]?.professionalSnapshot?.logo)
+  })).toBe(true)
+
+  await page.getByText('← Volver a presupuestos').click()
+  await page.getByRole('button', { name: 'Crear presupuesto' }).click()
+  await page.getByLabel('Fecha de emisión').fill('2027-01-05')
+  await page.getByLabel('Nombre o razón social').fill('Cliente 2027')
+  await page.getByRole('button', { name: 'Guardar presupuesto' }).click()
+  await expect(page.getByRole('heading', { name: 'Presupuesto 2027-001' })).toBeVisible()
+
+  await page.reload()
+  await page.getByRole('button', { name: 'Presupuestos', exact: true }).click()
+  await expect(page.getByText('2026-001')).toBeVisible()
+  await page.getByLabel('Estado de 2026-001').selectOption('SENT')
+  await expect(page.getByText('Estado actualizado.')).toBeVisible()
+  await page.reload()
+  await page.getByRole('button', { name: 'Presupuestos', exact: true }).click()
+  await expect(page.getByLabel('Estado de 2026-001')).toHaveValue('SENT')
+  await page.getByRole('button', { name: /Abrir\/editar 2026-001/ }).click()
+  await page.getByLabel('Nombre o razón social').fill('Agencia Norte Actualizada')
+  await expect(page.getByLabel('Estado')).toBeDisabled()
+  await page.getByRole('button', { name: 'Guardar cambios' }).click()
+  await expect(page.getByRole('heading', { name: 'Presupuesto 2026-001' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Mi perfil', exact: true }).click()
+  await page.getByLabel('Nombre completo').fill('Nombre Nuevo')
+  await page.getByLabel('Régimen fiscal').selectOption('PROFESSIONAL_SERVICES')
+  await page.getByRole('button', { name: 'Guardar perfil' }).click()
+  await page.getByRole('button', { name: 'Presupuestos' }).click()
+  await page.getByRole('button', { name: /Abrir\/editar 2026-001/ }).click()
+  await expect(page.getByText(/perfil congelado: Ana López.*régimen RESICO/i)).toBeVisible()
+  await expect(page.getByRole('button', { name: /eliminar|archivar/i })).toHaveCount(0)
+})

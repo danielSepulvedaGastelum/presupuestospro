@@ -1,0 +1,61 @@
+import { expect, test } from '@playwright/test'
+
+test('CRUD de servicios copia datos sin vínculo vivo', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Servicios' }).click()
+  await page.getByLabel('Nombre del servicio').fill('Consultoría')
+  await page.getByLabel('Precio predeterminado').fill('800')
+  await page.getByRole('button', { name: 'Guardar servicio' }).click()
+  await expect(page.getByRole('heading', { name: 'Consultoría' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Presupuestos' }).click()
+  await page.getByRole('button', { name: 'Crear presupuesto' }).click()
+  await page.getByLabel('Agregar desde servicios').selectOption({ index: 1 })
+  const line = page.locator('.line-card').first()
+  await expect(line.getByLabel('Descripción')).toHaveValue('Consultoría')
+  await line.getByLabel('Descripción').fill('Consultoría inicial')
+  await line.getByLabel('Precio unitario').fill('750')
+  await page.getByRole('button', { name: 'Servicios' }).click()
+  await page.getByRole('button', { name: 'Editar Consultoría' }).click()
+  await page.getByLabel('Nombre del servicio').fill('Consultoría avanzada')
+  await page.getByRole('button', { name: 'Guardar servicio' }).click()
+  await page.getByRole('button', { name: 'Eliminar Consultoría avanzada' }).click()
+  await expect(page.getByText(/presupuestos existentes no cambiarán/)).toBeVisible()
+  await page.getByRole('button', { name: 'Confirmar eliminación' }).click()
+  await expect(page.getByRole('heading', { name: 'Consultoría avanzada' })).toHaveCount(0)
+})
+
+test('sugiere la versión más reciente del cliente como copia editable', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Mi perfil', exact: true }).click()
+  await page.getByLabel('Nombre completo').fill('Ana López')
+  await page.getByLabel('RFC').fill('LOPA900101AA1')
+  await page.getByLabel('Régimen fiscal').selectOption('RESICO')
+  await page.getByRole('button', { name: 'Guardar perfil' }).click()
+  await expect(page.getByText(/Perfil guardado\./)).toBeVisible()
+
+  async function saveClient(name: string, phone: string) {
+    await page.getByRole('button', { name: 'Presupuestos', exact: true }).click()
+    await page.getByRole('button', { name: 'Crear presupuesto' }).click()
+    await page.getByLabel('Nombre o razón social').fill(name)
+    await page.getByLabel('RFC', { exact: true }).fill('AGN010101AA1')
+    await page.getByLabel('Teléfono').fill(phone)
+    await page.getByRole('button', { name: 'Guardar presupuesto' }).click()
+    await expect(page.getByRole('heading', { name: /Presupuesto 2026-00[12]/ })).toBeVisible()
+  }
+
+  await saveClient('Agencia Norte', '111')
+  await saveClient('Agencia Norte actualizada', '222')
+  await page.getByRole('button', { name: 'Presupuestos', exact: true }).click()
+  await page.getByRole('button', { name: 'Crear presupuesto' }).click()
+  await page.getByLabel('Buscar cliente anterior').fill('AGN010101AA1')
+  const suggestions = page.getByRole('button', { name: /Usar Agencia Norte/i })
+  await expect(suggestions).toHaveCount(1)
+  await suggestions.click()
+  await expect(page.getByLabel('Teléfono')).toHaveValue('222')
+  await page.getByLabel('Teléfono').fill('333')
+
+  await page.getByRole('button', { name: 'Presupuestos', exact: true }).click()
+  await page.getByRole('button', { name: /Abrir\/editar 2026-002/ }).click()
+  await expect(page.getByLabel('Teléfono')).toHaveValue('222')
+})
