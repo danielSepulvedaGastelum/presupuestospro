@@ -18,8 +18,8 @@
 
 **Purpose**: Preparar la única dependencia nueva y la estructura prevista por el plan.
 
-- [ ] T001 Instalar `fflate` como dependencia de producción y actualizar `package.json` y `package-lock.json`
-- [ ] T002 Crear el directorio y módulo base de coordinación de exportación en `src/export/export-all-quotes.ts`
+- [X] T001 Instalar `fflate` como dependencia de producción y actualizar `package.json` y `package-lock.json`
+- [X] T002 Crear el directorio y módulo base de coordinación de exportación en `src/export/export-all-quotes.ts`
 
 ---
 
@@ -29,13 +29,13 @@
 
 **⚠️ CRITICAL**: Ninguna historia puede completarse hasta terminar esta fase.
 
-- [ ] T003 [P] Escribir pruebas unitarias fallidas del documento de copia v1, ausencia de opcionales y conversión Base64 reversible del logo en `tests/unit/export-backup.test.ts`
-- [ ] T004 [P] Escribir pruebas unitarias fallidas de sanitización, nombres reservados, sustituto `Cliente` y patrón único de PDF en `tests/unit/export-filenames.test.ts`
-- [ ] T005 [P] Implementar tipos `ExportSnapshot` y `BackupDocumentV1`, serialización sin recálculo y conversión reversible del logo en `src/domain/export-backup.ts`
-- [ ] T006 [P] Implementar nombres deterministas y seguros para ZIP y PDF con fecha civil local en `src/domain/export-filenames.ts`
-- [ ] T007 Añadir `readExportSnapshot()` con una sola transacción `readonly` sobre `profile`, `services`, `quotes` y `annualSequences` en `src/persistence/database.ts`
-- [ ] T008 Extraer `createQuotePdfBlob()` para reutilizar carga, validación y construcción de pdfmake en `src/pdf/create-quote-pdf.ts` y adaptar `src/pdf/download-quote-pdf.ts` para usarla
-- [ ] T009 Ejecutar `npm run test:unit` y `npm run typecheck` y corregir la infraestructura compartida en `src/domain/export-backup.ts`, `src/domain/export-filenames.ts`, `src/persistence/database.ts` y `src/pdf/create-quote-pdf.ts`
+- [X] T003 [P] Escribir pruebas unitarias fallidas del documento de copia v1, ausencia de opcionales y conversión Base64 reversible del logo en `tests/unit/export-backup.test.ts`
+- [X] T004 [P] Escribir pruebas unitarias fallidas de sanitización, nombres reservados, sustituto `Cliente` y patrón único de PDF en `tests/unit/export-filenames.test.ts`
+- [X] T005 Implementar tipos `ExportSnapshot` y `BackupDocumentV1`, serialización sin recálculo y conversión reversible del logo en `src/domain/export-backup.ts`
+- [X] T006 Implementar nombres deterministas y seguros para ZIP y PDF con fecha civil local en `src/domain/export-filenames.ts`
+- [X] T007 Añadir `readExportSnapshot()` con una sola transacción `readonly` sobre `profile`, `services`, `quotes` y `annualSequences` en `src/persistence/database.ts`
+- [X] T008 Extraer `createQuotePdfBlob()` para reutilizar carga, validación y construcción de pdfmake en `src/pdf/create-quote-pdf.ts` y adaptar `src/pdf/download-quote-pdf.ts` para usarla
+- [X] T009 Ejecutar `npm run test:unit` y `npm run typecheck` y corregir la infraestructura compartida en `src/domain/export-backup.ts`, `src/domain/export-filenames.ts`, `src/persistence/database.ts` y `src/pdf/create-quote-pdf.ts`
 
 **Checkpoint**: La aplicación puede obtener una instantánea inmutable, serializarla y producir blobs PDF con las mismas reglas de la descarga individual.
 
@@ -49,13 +49,13 @@
 
 ### Tests for User Story 1
 
-- [ ] T010 [P] [US1] Escribir la prueba E2E fallida de lista vacía, descarga única completa, nombre del ZIP y entradas esperadas en `tests/e2e/export-all.spec.ts`
+- [X] T010 [P] [US1] Escribir la prueba E2E fallida de lista vacía, descarga única completa, nombre del ZIP y entradas esperadas en `tests/e2e/export-all.spec.ts`
 - [ ] T011 [P] [US1] Ampliar la prueba de equivalencia visual y monetaria entre PDF individual y PDF exportado, incluido el total `$2,320.00`, en `tests/e2e/pdf.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Implementar en `src/export/export-all-quotes.ts` la lectura de instantánea, serialización UTF-8, generación secuencial de PDF, importación dinámica de `fflate`, ZIP con PDF sin recompresión y una sola descarga con URL revocada
-- [ ] T013 [US1] Añadir la acción visible `Exportar todo (.zip)`, el rechazo de lista vacía y el manejo de éxito o error fatal en `src/features/quotes/QuoteListView.tsx`
+- [X] T012 [US1] Implementar en `src/export/export-all-quotes.ts` la lectura de instantánea, serialización UTF-8, generación secuencial de PDF, importación dinámica de `fflate`, ZIP con PDF sin recompresión y una sola descarga con URL revocada
+- [X] T013 [US1] Añadir la acción visible `Exportar todo (.zip)`, el rechazo de lista vacía y el manejo de éxito o error fatal en `src/features/quotes/QuoteListView.tsx`
 - [ ] T014 [US1] Ejecutar las pruebas de `tests/e2e/export-all.spec.ts` y `tests/e2e/pdf.spec.ts` y corregir el flujo P1 en `src/export/export-all-quotes.ts` y `src/features/quotes/QuoteListView.tsx`
 
 **Checkpoint**: US1 entrega el MVP completo y puede demostrarse sin implementar todavía los mensajes detallados de progreso o fallos parciales.
@@ -70,13 +70,13 @@
 
 ### Tests for User Story 2
 
-- [ ] T015 [P] [US2] Ampliar las pruebas de contrato JSON con todos los almacenes, campos opcionales ausentes, tipos monetarios, fechas y bytes exactos del logo en `tests/unit/export-backup.test.ts`
+- [X] T015 [P] [US2] Ampliar las pruebas de contrato JSON con todos los almacenes, campos opcionales ausentes, tipos monetarios, fechas y bytes exactos del logo en `tests/unit/export-backup.test.ts`
 - [ ] T016 [P] [US2] Escribir la prueba E2E de contenido restaurable y consistencia de la instantánea ante una escritura desde otra pestaña en `tests/e2e/export-all.spec.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T017 [US2] Completar el mapeo exhaustivo del contrato `presupuestospro-backup` v1 sin rellenar opcionales ni recalcular valores en `src/domain/export-backup.ts`
-- [ ] T018 [US2] Asegurar que todas las lecturas se crean dentro de la misma transacción y que el coordinador consume exclusivamente la instantánea capturada en `src/persistence/database.ts` y `src/export/export-all-quotes.ts`
+- [X] T017 [US2] Completar el mapeo exhaustivo del contrato `presupuestospro-backup` v1 sin rellenar opcionales ni recalcular valores en `src/domain/export-backup.ts`
+- [X] T018 [US2] Asegurar que todas las lecturas se crean dentro de la misma transacción y que el coordinador consume exclusivamente la instantánea capturada en `src/persistence/database.ts` y `src/export/export-all-quotes.ts`
 - [ ] T019 [US2] Ejecutar `tests/unit/export-backup.test.ts` y los escenarios de restaurabilidad de `tests/e2e/export-all.spec.ts` y corregir cualquier pérdida o mezcla temporal en `src/domain/export-backup.ts` y `src/persistence/database.ts`
 
 **Checkpoint**: US2 conserva todos los datos de la instantánea conforme a `contracts/export-archive.md` y sigue siendo de solo lectura.
@@ -91,15 +91,15 @@
 
 ### Tests for User Story 3
 
-- [ ] T020 [P] [US3] Escribir pruebas unitarias fallidas del reporte UTF-8 ordenado, mensaje no técnico y resultado `complete`/`partial` en `tests/unit/export-backup.test.ts`
-- [ ] T021 [P] [US3] Ampliar las pruebas E2E con doble pulsación, progreso accesible, fallo parcial, fallo de todos los PDF, ausencia de reporte sin fallos y error fatal sin descarga en `tests/e2e/export-all.spec.ts`
+- [X] T020 [P] [US3] Escribir pruebas unitarias fallidas del reporte UTF-8 ordenado en `tests/unit/export-backup.test.ts` y del resultado `complete`/`partial` en `tests/unit/export-all-quotes.test.ts`
+- [ ] T021 [P] [US3] Ampliar las pruebas E2E con doble pulsación, progreso accesible, fallo parcial, fallo de todos los PDF, ausencia de reporte sin fallos y error fatal sin descarga en `tests/e2e/export-all.spec.ts`, incluyendo una colección de 50 presupuestos y visibilidad del estado en menos de un segundo
 - [ ] T022 [P] [US3] Añadir escenarios móvil y `prefers-reduced-motion` para el control de al menos 44 px y el estado legible desde 320 px en `tests/e2e/mobile.spec.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Implementar captura por presupuesto, continuación secuencial, resultado discriminado y creación condicional de `errores-exportacion.txt` en `src/export/export-all-quotes.ts`
-- [ ] T024 [US3] Implementar bloqueo contra doble activación, texto `Generando PDF X de N`, `role="status"`, alertas de resultado parcial/fatal y liberación segura del estado en `src/features/quotes/QuoteListView.tsx`
-- [ ] T025 [US3] Añadir indicador animado responsive, tamaño táctil mínimo y regla `prefers-reduced-motion` en `src/styles.css`
+- [X] T023 [US3] Implementar captura por presupuesto, continuación secuencial, resultado discriminado y creación condicional de `errores-exportacion.txt` en `src/export/export-all-quotes.ts`
+- [X] T024 [US3] Implementar bloqueo contra doble activación, texto `Generando PDF X de N`, `role="status"`, alertas de resultado parcial/fatal y liberación segura del estado en `src/features/quotes/QuoteListView.tsx`
+- [X] T025 [US3] Añadir indicador animado responsive, tamaño táctil mínimo y regla `prefers-reduced-motion` en `src/styles.css`
 - [ ] T026 [US3] Ejecutar los escenarios de `tests/e2e/export-all.spec.ts` y `tests/e2e/mobile.spec.ts` y corregir progreso, accesibilidad y fallos parciales en `src/export/export-all-quotes.ts`, `src/features/quotes/QuoteListView.tsx` y `src/styles.css`
 
 **Checkpoint**: Las tres historias funcionan; los fallos aislados no eliminan la copia de datos ni los PDF válidos y los errores fatales no producen descargas incompletas.
@@ -113,7 +113,7 @@
 - [ ] T027 [P] Añadir o ajustar datos de prueba para validar 200 presupuestos y confirmar que no existe truncamiento por encima de 200 en `tests/e2e/export-all.spec.ts`
 - [ ] T028 Ejecutar `npm run check` y corregir regresiones de tipos, pruebas unitarias, build y pruebas E2E en `src/`, `tests/`, `package.json` y `package-lock.json`
 - [ ] T029 Completar y documentar la comprobación manual reproducible de ZIP completo, fallo parcial, consistencia entre pestañas, accesibilidad, 320 px y volumen descrita en `specs/003-exportar-copia-zip/quickstart.md`
-- [ ] T030 Actualizar `AGENTS.md` solo con decisiones transversales y reutilizables de esta feature, una línea por decisión con referencia `[003]`, conforme al paso de mantenimiento de `specs/003-exportar-copia-zip/plan.md`
+- [X] T030 Actualizar `AGENTS.md` solo con decisiones transversales y reutilizables de esta feature, una línea por decisión con referencia `[003]`, conforme al paso de mantenimiento de `specs/003-exportar-copia-zip/plan.md`
 
 ---
 
