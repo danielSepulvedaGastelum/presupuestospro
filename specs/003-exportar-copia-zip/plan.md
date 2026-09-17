@@ -121,6 +121,12 @@ acoplar la vista a IndexedDB, pdfmake o fflate.
 - La animación visual respeta `prefers-reduced-motion: reduce` sin ocultar el texto de estado.
 - El control conserva el mínimo táctil de 44 px y funciona desde 320 px.
 
+### Fase final: verificación y mantenimiento
+
+1. Ejecutar `npm run check` y corregir cualquier regresión de tipos, pruebas unitarias, build o pruebas E2E.
+2. Completar la comprobación manual reproducible de `quickstart.md`, incluidos ZIP completo, fallo parcial, consistencia entre pestañas, accesibilidad y viewport de 320 px.
+3. Actualizar `AGETNS.md` con las decisiones de diseño y convenciones nuevas de esta feature, una línea por decisión, con referencia a la spec (p. ej. `[003] ...`). No incluir entradas por incluir; asegurar siempre que sea información transversal y relevante para el proyecto que puedan aprovechar futuras features.
+
 ## Complexity Tracking
 
 No aplica: el diseño supera todos los gates constitucionales.
