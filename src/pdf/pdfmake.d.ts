@@ -1,6 +1,6 @@
 declare module 'pdfmake/build/pdfmake' {
   import type { TDocumentDefinitions } from 'pdfmake/interfaces'
-  interface OutputDocument { download(filename?: string): Promise<void> }
+  interface OutputDocument { download(filename?: string): Promise<void>; getBlob(): Promise<Blob> }
   interface PdfMakeBrowser {
     addVirtualFileSystem(vfs: Record<string, string>): void
     createPdf(definition: TDocumentDefinitions): OutputDocument

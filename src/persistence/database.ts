@@ -1,5 +1,7 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb'
 import { addCivilDays, isCivilDate, sequenceYear } from '../domain/dates'
+import { localToday } from '../domain/dates'
+import type { ExportSnapshot } from '../domain/export-backup'
 import { decimal, normalizeDecimal } from '../domain/money'
 import { formatQuoteNumber, nextSequenceNumber } from '../domain/numbering'
 import { calculateQuote, taxRulesFor } from '../domain/quote-calculator'
@@ -222,6 +224,30 @@ export async function listQuotes(): Promise<SavedQuote[]> {
   try {
     const quotes = await (await getDatabase()).getAllFromIndex('quotes', 'updatedAt')
     return quotes.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+  } catch (error) {
+    throw storageFailure(error)
+  }
+}
+
+/** Captures every exportable store in one readonly transaction. */
+export async function readExportSnapshot(now = new Date()): Promise<ExportSnapshot> {
+  try {
+    const database = await getDatabase()
+    const transaction = database.transaction(['profile', 'services', 'quotes', 'annualSequences'], 'readonly')
+    const profileRequest = transaction.objectStore('profile').get('current')
+    const servicesRequest = transaction.objectStore('services').getAll()
+    const quotesRequest = transaction.objectStore('quotes').getAll()
+    const sequencesRequest = transaction.objectStore('annualSequences').getAll()
+    const [profile, services, quotes, annualSequences] = await Promise.all([profileRequest, servicesRequest, quotesRequest, sequencesRequest])
+    await transaction.done
+    return {
+      capturedAt: now.toISOString(),
+      localDate: localToday(now),
+      profile: profile ? structuredClone(profile) : null,
+      services: structuredClone(services),
+      quotes: structuredClone(quotes),
+      annualSequences: structuredClone(annualSequences),
+    }
   } catch (error) {
     throw storageFailure(error)
   }
