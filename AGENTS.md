@@ -44,13 +44,13 @@ npm run check
 verificar working tree limpio y commitear pendientes, correr tests (para si fallan), 
 checkout main, 
 merge --no-ff de la rama de la feature con mensaje "Merge feature NN:<nombre>",
-y moistar git log --oneline -10
+y moistar git log --oneline -10, además cambia en spec.md de esta spec => **Status**: Publicada
 
 Las reglas de producto viven en .specify/memory/constitution.md y el estado del producto en specs/README.md
 
 
 ## Spec-kit
 
-* Antes de ejecutar el flujo de `/speckit.specify`, SIEMPRE ejecuta primero el hook `before_specify` (skill `speckit-git-feature`) para crear la rama de la feature, y espera su resultado antes de crear la spec.
+* Antes de ejecutar el flujo de `/speckit.specify`, SIEMPRE ejecuta primero el hook `before_specify` (skill `speckit-git-feature`) para crear la rama de la feature, y espera su resultado antes de crear la spec, después de terminar el spec además cambia en spec.md de esta spec => **Status**: Prevista.
 * Tras completar `/speckit.specify`, verifica con `git branch --show-current` que estamos en la rama `NNN-nombre-feature` y no en `master`. Si no es así, avísame antes de continuar.
 * Al ejecutar `/speckit.plan`, SIEMPRE incluye en `plan.md`, como último paso de la fase final, un paso de mantenimiento: “Actualizar `AGENTS.md` con las decisiones de diseño y convenciones nuevas de esta feature, una línea por decisión, con referencia a la spec (p. ej. ‘[003] ...’). No incluyas entradas por incluir, asegúrate siempre de que es información transversal y relevante para el proyecto que pueden aprovechar futuras features.”

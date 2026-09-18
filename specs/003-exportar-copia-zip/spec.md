@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-17
 
-**Status**: Draft
+**Status**: Publicada
 
 **Input**: User description: "Exportar todos mis presupuestos en un único archivo .zip con un PDF por presupuesto y un archivo completo de datos para una futura restauración."
 

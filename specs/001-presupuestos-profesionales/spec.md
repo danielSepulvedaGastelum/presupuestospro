@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-09
 
-**Status**: Approved
+**Status**: Publicada
 
 **Approved**: 2026-09-11
 

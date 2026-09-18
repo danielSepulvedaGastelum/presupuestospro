@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-11
 
-**Status**: Draft
+**Status**: Publicada
 
 **Input**: Mejorar la presentación de PresupuestosPro con una página de inicio, navegación común y un rediseño visual y de PDF, sin cambiar funcionalidad, cálculos ni datos.
 
